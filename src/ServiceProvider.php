@@ -24,7 +24,8 @@ final class ServiceProvider extends BaseServiceProvider
      * @return  void
      */
     public function register(): void
-    {        // package config file
+    {   
+        // package config file
         $this->mergeConfigFrom(__DIR__ . '/../config/url-shortener.php', 'url-shortener');
     }
 
@@ -34,10 +35,12 @@ final class ServiceProvider extends BaseServiceProvider
      * @return  void
      */
     private function bootPublishes(): void
-    {        // package configs
+    {   
+        // package configs
         $this->publishes([
             __DIR__ . '/../config/url-shortener.php' => $this->app->configPath('url-shortener.php'),
         ], 'url-shortener-config');
+
         // migrations
         $migrationsPath = __DIR__ . '/../database/migrations/';
 
@@ -47,6 +50,7 @@ final class ServiceProvider extends BaseServiceProvider
 
         $this->loadMigrationsFrom($migrationsPath);
     }
+    
     /**
      * Load pacakge-specific routes
      *

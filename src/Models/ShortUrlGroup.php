@@ -15,9 +15,7 @@ class ShortUrlGroup extends Model
 
     public function __construct(array $attributes = [])
     {
-        $prefix = Config::get('url-shortener.table_name', 'short_url') . '_groups';
-
-        $this->table = "{$prefix}_licenses";
+        $this->table = Config::get('url-shortener.table_name', 'short_url') . '_groups';
 
         parent::__construct($attributes);
     }

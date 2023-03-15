@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelReady\UrlShortener;
+namespace LaravelReady\UrlShortener\Supports;
 
 use Illuminate\Support\Facades\Config;
 

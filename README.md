@@ -8,7 +8,7 @@
 [![License][badge_license]][link_license]
 
 ## 📂 About
-Simple URL shortener for laravel apps...
+URL shortener for Laravel apps...
 
 ## 📦 Installation
 

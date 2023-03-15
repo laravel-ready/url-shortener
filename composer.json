@@ -1,0 +1,77 @@
+{
+    "name": "laravel-ready/url-shortener",
+    "description": "Simple URL shortener for laravel apps",
+    "type": "library",
+    "license": "MIT",
+    "version": "1.0.0",
+    "keywords": [
+        "url",
+        "laravel",
+        "shortener",
+        "url shortener"
+    ],
+    "authors": [
+        {
+            "name": "Egoist",
+            "email": "epsilonelittr@gmail.com"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/laravel-ready/url-shortener/issues",
+        "source": "https://github.com/laravel-ready/url-shortener"
+    },
+    "require": {
+        "php": "^8.0",
+        "illuminate/support": "^9.0"
+    },
+    "require-dev": {
+        "mockery/mockery": "^1.4",
+        "orchestra/testbench": "^7.0.0",
+        "phpstan/phpstan": "^1.8",
+        "phpstan/phpstan-phpunit": "^1.1",
+        "phpstan/phpstan-deprecation-rules": "^1.0",
+        "phpstan/extension-installer": "^1.1",
+        "nunomaduro/larastan": "^2.1",
+        "pestphp/pest": "^1.2",
+        "pestphp/pest-plugin-laravel": "^1.2",
+        "pestphp/pest-plugin-parallel": "^1.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "LaravelReady\\UrlShortener\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests"
+        }
+    },
+    "config": {
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "scripts": {
+        "lint": "php-cs-fixer fix -v",
+        "test:coverage": "@test  --coverage-php ./coverage/cov/default.cov",
+        "test:coverage:html": "@test  --coverage-html coverage/html/default",
+        "test": "vendor/bin/pest --colors=always --parallel",
+        "test:lint": "php-cs-fixer fix -v --dry-run",
+        "test:styles": "vendor/bin/phpstan analyse --ansi",
+        "test:styles:pro": "vendor/bin/phpstan analyse --pro --fix --watch"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "LaravelReady\\UrlShortener\\ServiceProvider"
+            ],
+            "aliases": {
+                "UrlShortener": "LaravelReady\\UrlShortener\\Facades\\UrlShortener"
+            }
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

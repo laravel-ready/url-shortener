@@ -78,18 +78,18 @@ class ShortUrl extends Model
 
     public function getExpireStatusAttribute($value)
     {
-        if ($this->expiration_date < now()) {
+        if ($this->expiration_date && $this->expiration_date < now()) {
             return 'expired';
         }
 
-        return $value;
+        return 'active';
     }
 
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
-    
+
     public function group(): BelongsTo
     {
         return $this->belongsTo(ShortUrlGroup::class);

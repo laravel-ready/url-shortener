@@ -16,36 +16,14 @@ class Domain
     public static function getDomainInfo($url)
     {
         if ($url) {
-            $pattern = '/^(https|http|ftp):\/\/(.*?)\/?/';
-            preg_match($pattern, "{$url}/", $matches);
+            $data = parse_url($url);
 
-            $parts = explode('.', $matches[2]);
-            $tld = array_pop($parts);
-            $host = array_pop($parts);
-
-            if (strlen($tld) == 2 && strlen($host) <= 3) {
-                $tld = "{$host}.{$tld}";
-                $host = array_pop($parts);
-            }
-
-            $info = [
-                'protocol' => $matches[1],
-                'subdomain' => implode('.', $parts),
-                'domain' => "{$host}.{$tld}",
-                'host' => $host,
-                'tld' => $tld,
-            ];
-
-            $parse = parse_url($url);
-
-            $data = array_merge($info, $parse);
-
-            $favicon = ShortUrlFavicon::where('domain', $data['domain'])->first();
+            $favicon = ShortUrlFavicon::where('domain', $data['host'])->first();
 
             if (!$favicon) {
                 $favicon = ShortUrlFavicon::create([
-                    'domain' => $data['domain'],
-                    'favicon' => (new Favicon())->getFavicon($data['domain']),
+                    'domain' => $data['host'],
+                    'favicon' => (new Favicon())->getFavicon($data['host']),
                 ]);
             }
 

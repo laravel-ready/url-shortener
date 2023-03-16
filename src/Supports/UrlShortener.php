@@ -43,11 +43,19 @@ class UrlShortener
             return $shortUrl;
         }
 
+        $shortCode = null;
+
+        if ($type === ShortingType::Custom || $type === ShortingType::EmojiCustom) {
+            $shortCode = $data['short_code'];
+        } else if ($type === ShortingType::Random) {
+            $shortCode = self::getRandomString();
+        }
+
         return ShortUrl::create([
             'url' => $url,
             'title' => $data['title'],
             'description' => $data['description'],
-            'short_code' => self::getRandomString(),
+            'short_code' => $shortCode,
             'type' => $type,
             'delay' => $data['delay'] ?? 0,
             'expire_date' => $data['expire_date'] ?? null,

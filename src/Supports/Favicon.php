@@ -2,7 +2,6 @@
 
 namespace LaravelReady\UrlShortener\Supports;
 
-use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Http;
 
 class Favicon
@@ -13,13 +12,18 @@ class Favicon
      * @param string $url : target URL
      * @return null|string
      */
-    public function getFavicon(string $domain): string
+    public function getFavicon(string $domain): string|null
     {
-        $client = new Client(['base_uri' => 'http://www.google.com/s2/']);
-        $response = $client->request('GET', "favicons?domain={$domain}");
+        try {
+            $url = "http://www.google.com/s2/favicons?domain={$domain}";
 
-        if ($response->getStatusCode() == 200) {
-            return base64_encode($response->getBody()->getContents());
+            $response = Http::get($url);
+
+            if ($response->getStatusCode() == 200) {
+                return base64_encode($response->getBody()->getContents());
+            }
+        } catch (\Throwable $th) {
+            //throw $th;
         }
 
         return null;

@@ -21,9 +21,11 @@ class UrlShortener
             }
 
             return $shortUrls;
-        } else {
+        } else if (is_string($urls)) {
             return $this->shortSingleUrl($urls, $data, null, $type);
         }
+
+        return null;
     }
 
     public function shortSingleUrl(string $url, array $data, int $groupId = null, ShortingType $type): ShortUrl

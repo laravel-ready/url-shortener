@@ -25,7 +25,7 @@ return new class extends Migration
         if (!Schema::hasTable($this->table)) {
             Schema::create($this->table, function (Blueprint $table) {
                 $groupsTableName = Config::get('url-shortener.table_name', 'short_url') . '_groups';
-                $faviconsTableName = Config::get('url-shortener.table_name', 'short_url') . '_groups';
+                $faviconsTableName = Config::get('url-shortener.table_name', 'short_url') . '_favicons';
 
                 $table->bigIncrements('id');
 

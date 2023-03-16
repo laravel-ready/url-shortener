@@ -3,12 +3,13 @@
 namespace LaravelReady\UrlShortener\Supports;
 
 use Illuminate\Support\Facades\Config;
+use LaravelReady\UrlShortener\Enums\ShortingType;
 use LaravelReady\UrlShortener\Models\ShortUrl;
 use LaravelReady\UrlShortener\Models\ShortUrlGroup;
 
 class UrlShortener
 {
-    public function shortUrl(string|array $urls, array $data): mixed
+    public function shortUrl(string|array $urls, array $data, ShortingType $type): mixed
     {
         if (is_array($urls)) {
             $shortUrls = [];
@@ -16,16 +17,16 @@ class UrlShortener
             $group = ShortUrlGroup::create();
 
             foreach ($urls as $url) {
-                $shortUrls[] = $this->shortSingleUrl($url, $data, $group->id);
+                $shortUrls[] = $this->shortSingleUrl($url, $data, $group->id, $type);
             }
 
             return $shortUrls;
         } else {
-            return $this->shortSingleUrl($urls, $data);
+            return $this->shortSingleUrl($urls, $data, null, $type);
         }
     }
 
-    public function shortSingleUrl(string $url, array $data, int $groupId = null): ShortUrl
+    public function shortSingleUrl(string $url, array $data, int $groupId = null, ShortingType $type): ShortUrl
     {
         $domain = Domain::getDomainInfo($url);
 
@@ -34,7 +35,7 @@ class UrlShortener
             'title' => $data['title'],
             'description' => $data['description'],
             'short_code' => $this->getRandomString(),
-            'type' => $data['type'],
+            'type' => $type,
             'delay' => $data['delay'],
             'expire_date' => $data['expire_date'],
             'password' => $data['password'],

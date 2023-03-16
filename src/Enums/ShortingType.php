@@ -2,7 +2,8 @@
 
 namespace LaravelReady\UrlShortener\Enums;
 
-enum ShortingType: string {
+enum ShortingType: string
+{
     case Random = 'random';
     case Custom = 'custom';
     case Emoji = 'emoji';

@@ -9,7 +9,7 @@ use LaravelReady\UrlShortener\Models\ShortUrlGroup;
 
 class UrlShortener
 {
-    public function shortUrl(string|array $urls, array $data, ShortingType $type): mixed
+    public static function shortUrl(string|array $urls, array $data, ShortingType $type = ShortingType::Random): mixed
     {
         if (is_array($urls)) {
             $shortUrls = [];
@@ -17,36 +17,47 @@ class UrlShortener
             $group = ShortUrlGroup::create();
 
             foreach ($urls as $url) {
-                $shortUrls[] = $this->shortSingleUrl($url, $data, $group->id, $type);
+                $shortUrls[] = self::shortSingleUrl($url, $data, $group->id, $type);
             }
 
             return $shortUrls;
         } else if (is_string($urls)) {
-            return $this->shortSingleUrl($urls, $data, null, $type);
+            return self::shortSingleUrl($urls, $data, null, $type);
         }
 
         return null;
     }
 
-    public function shortSingleUrl(string $url, array $data, int $groupId = null, ShortingType $type): ShortUrl
+    public static function shortSingleUrl(string $url, array $data, int $groupId = null, ShortingType $type): ShortUrl
     {
         $domain = Domain::getDomainInfo($url);
 
-        return ShortUrl::firstOrCreate([
+        $shortUrl = ShortUrl::where([
+            ['url', '=', $url],
+            ['group_id', '=', $groupId],
+            ['user_id', '=', auth()->id()],
+            ['type', '=', $type],
+        ])->first();
+
+        if ($shortUrl) {
+            return $shortUrl;
+        }
+
+        return ShortUrl::create([
             'url' => $url,
             'title' => $data['title'],
             'description' => $data['description'],
-            'short_code' => $this->getRandomString(),
+            'short_code' => self::getRandomString(),
             'type' => $type,
-            'delay' => $data['delay'],
-            'expire_date' => $data['expire_date'],
-            'password' => $data['password'],
-            'favicon_id' => $domain['favicon_id'],
+            'delay' => $data['delay'] ?? 0,
+            'expire_date' => $data['expire_date'] ?? null,
+            'password' => $data['password'] ?? null,
+            'favicon_id' => $domain['favicon_id'] ?? null,
             'group_id' => $groupId
         ]);
     }
 
-    public function getRandomString(int $retry = 10): string
+    public static function getRandomString(int $retry = 10): string
     {
         $characters = Config::get('url-shortener.characters');
         $minLength = Config::get('url-shortener.min_length');
@@ -74,7 +85,7 @@ class UrlShortener
 
         if (ShortUrl::where('short_code', $randomString)->exists()) {
             if ($retry > 0) {
-                return $this->getRandomString($retry - 1);
+                return self::getRandomString($retry - 1);
             } else {
                 return false;
             }

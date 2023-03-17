@@ -9,12 +9,17 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\ConnectionResolverInterface;
 use Illuminate\Database\Connectors\ConnectionFactory;
 
-class Eloquent {
+class Eloquent
+{
+    protected static $previousResolver = null;
+
     /**
      * Init the database connection
      */
-    public static function initDbConnection(): void
+    public static function initNewDbConnection(): void
     {
+        self::$previousResolver = Model::getConnectionResolver();
+
         // Create a new container instance
         $container = new Container();
 
@@ -33,30 +38,47 @@ class Eloquent {
         $connection = $factory->make($config);
 
         // Set the connection resolver on the Eloquent ORM
-        Model::setConnectionResolver(new class($connection) implements ConnectionResolverInterface {
+        Model::setConnectionResolver(new class($connection) implements ConnectionResolverInterface
+        {
             private $connection;
-            
-            public function __construct(Connection $connection) {
+
+            public function __construct(Connection $connection)
+            {
                 $this->connection = $connection;
             }
 
-            public function connection($name = null) {
+            public function connection($name = null)
+            {
                 return $this->connection;
             }
 
-        	/**
+            /**
              * Get the default connection name.
              * @return string
              */
-            public function getDefaultConnection() {}
-            
+            public function getDefaultConnection()
+            {
+            }
+
             /**
              * Set the default connection name.
              *
              * @param string $name
              * @return void
              */
-            public function setDefaultConnection($name) {}
+            public function setDefaultConnection($name)
+            {
+            }
         });
+    }
+
+    /**
+     * Restore the previous database connection
+     * 
+     * @return void
+     */
+    public static function restorePreviousDbConnection(): void
+    {
+        Model::setConnectionResolver(self::$previousResolver);
     }
 }

@@ -15,20 +15,19 @@ class Emoji
      * 
      * @return Builder
      */
-    public static function getBaseEmojiQuery(array $select): Builder
+    public static function getBaseEmojiQuery(array $select = []): Builder
     {
-        return UnicodeEmoji::select($select)
-        ->with([
+        $query = UnicodeEmoji::with([
             'version',
             'emojiVersion',
-        ])->whereHasIn('version', function($query) {
+        ])->whereHasIn('version', function ($query) {
             $query->whereRaw('CAST(tag AS INTEGER) BETWEEN ? AND ?', [
-                Config::get('url-shortener.emoji.min_unicode_version', 1), 
+                Config::get('url-shortener.emoji.min_unicode_version', 1),
                 Config::get('url-shortener.emoji.max_unicode_version', 15)
             ]);
-        })->whereHasIn('emojiVersion', function($query) {
+        })->whereHasIn('emojiVersion', function ($query) {
             $query->whereRaw('CAST(tag AS INTEGER) BETWEEN ? AND ?', [
-                Config::get('url-shortener.emoji.min_emoji_version', 1), 
+                Config::get('url-shortener.emoji.min_emoji_version', 1),
                 Config::get('url-shortener.emoji.max_emoji_version', 15)
             ]);
         })->where([
@@ -36,8 +35,14 @@ class Emoji
             ['hasZeroWidthSpace', '=', 0],
             ['isSupportingByChromium', '=', 1],
         ]);
+
+        if (count($select)) {
+            $query->select($select);
+        }
+
+        return $query;
     }
-    
+
     /**
      * Returns emojis string length
      *

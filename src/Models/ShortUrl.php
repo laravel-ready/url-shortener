@@ -65,9 +65,10 @@ class ShortUrl extends Model
     protected $appends = [
         'expires_in',
         'expire_status',
+        'short_url',
     ];
 
-    public function getExpiresInAttribute()
+    public function getExpiresInAttribute(): int
     {
         if ($this->expiration_date < now()) {
             return 0;
@@ -76,13 +77,18 @@ class ShortUrl extends Model
         return Carbon::now()->diffInDays($this->expiration_date);
     }
 
-    public function getExpireStatusAttribute($value)
+    public function getExpireStatusAttribute(): string
     {
         if ($this->expiration_date && $this->expiration_date < now()) {
             return 'expired';
         }
 
         return 'active';
+    }
+
+    public function getShortUrlAttribute(): string
+    {
+        return urldecode(route('url-shortener.redirect.index', $this->short_code));
     }
 
     public function user(): BelongsTo

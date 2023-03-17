@@ -48,8 +48,8 @@ return new class extends Migration
                 $table->text('short_code')->comment('Short URL code, exp: example.com/{short_code}');
                 $table->enum('type', ['random', 'custom', 'emoji_random', 'emoji_custom'])->comment('Shorting type');
                 $table->string('url', 2048)->comment('Redirect URL address');
-                $table->boolean('status')->default(true);
-                $table->integer('delay')->default('0')->comment('Delay time for redirect');
+                $table->boolean('status')->default(true)->comment('URL redirect status, true: active, false: inactive');
+                $table->integer('delay')->default('0')->comment('Delay time for redirect (in seconds)');
                 $table->dateTime('expire_date')->nullable()->default(null)->comment('URL expiration date');
                 $table->text('password')->nullable()->default(null)->comment('URL password');
 

@@ -39,4 +39,50 @@ return [
      * Default: 'r'
      */
     'redirect_route_prefix' => 'r',
+
+    /**
+     * Emoji related settings
+     */
+    'emoji' => [
+        /**
+         * Enable emoji short url
+         * 
+         * Default: true
+         */
+        'allow' => true,
+
+        /**
+         * Name of the database file
+         */
+        'database' => 'emojipadia-v1.0.db',
+
+        /**
+         * Minimum unicode version
+         * 
+         * @see https://unicode.org/versions/Unicode15.0.0/
+         */
+        'min_unicode_version' => 1.0,
+
+        /**
+         * Maximum unicode version
+         * 
+         * @see https://unicode.org/versions/Unicode15.0.0/
+         */
+        'max_unicode_version' => 15.0,
+
+        /**
+         * Minimum emoji version
+         * 
+         * @see https://unicode.org/emoji/charts/emoji-versions.html
+         */
+        'min_emoji_version' => 1.0,
+
+        /**
+         * Maximum emoji version
+         * 
+         * @see https://unicode.org/emoji/charts/emoji-versions.html
+         */
+        'max_emoji_version' => 15.0,
+    ]
+    
 ];

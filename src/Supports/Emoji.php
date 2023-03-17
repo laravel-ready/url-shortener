@@ -8,9 +8,17 @@ use LaravelReady\UrlShortener\Models\Emoji\UnicodeEmoji;
 
 class Emoji
 {
-    public static function getBaseEmojiQuery(): Builder
+    /**
+     * Get base emoji query
+     * 
+     * This query is used to get most basic emojis
+     * 
+     * @return Builder
+     */
+    public static function getBaseEmojiQuery(array $select): Builder
     {
-        return UnicodeEmoji::with([
+        return UnicodeEmoji::select($select)
+        ->with([
             'version',
             'emojiVersion',
         ])->whereHasIn('version', function($query) {
@@ -23,11 +31,21 @@ class Emoji
                 Config::get('url-shortener.emoji.min_emoji_version', 1), 
                 Config::get('url-shortener.emoji.max_emoji_version', 15)
             ]);
-        })
-        ->where([
+        })->where([
             ['isLayered', '=', 0],
             ['hasZeroWidthSpace', '=', 0],
             ['isSupportingByChromium', '=', 1],
         ]);
+    }
+    
+    /**
+     * Returns emojis string length
+     *
+     * @param $emojis: emoji characters
+     * @return int
+     */
+    public static function emojiLen($emojis): int
+    {
+        return $emojis ? count(preg_split('~\X{1}\K~u', $emojis)) - 1 : 0;
     }
 }

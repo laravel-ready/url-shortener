@@ -52,12 +52,13 @@ final class ServiceProvider extends BaseServiceProvider
     }
 
     /**
-     * Load pacakge-specific routes
+     * Load package-specific routes
      *
      * @return  void
      */
     private function loadRoutes(): void
     {
         $this->loadRoutesFrom(__DIR__ . '/../routes/redirect.php');
+        $this->loadRoutesFrom(__DIR__ . '/../routes/emoji.php');
     }
 }

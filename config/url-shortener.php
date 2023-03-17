@@ -83,6 +83,14 @@ return [
          * @see https://unicode.org/emoji/charts/emoji-versions.html
          */
         'max_emoji_version' => 15.0,
+
+        /**
+         * Base route for emoji
+         * 
+         * We will use this route to list emojis
+         * 
+         * Default: 'emojis'
+         */
+        'base_route' => 'emojis',
     ]
-    
 ];

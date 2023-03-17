@@ -2,10 +2,12 @@
 
 namespace LaravelReady\UrlShortener\Supports;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
-use LaravelReady\UrlShortener\Enums\ShortingType;
 use LaravelReady\UrlShortener\Models\ShortUrl;
+use LaravelReady\UrlShortener\Enums\ShortingType;
 use LaravelReady\UrlShortener\Models\ShortUrlGroup;
+use LaravelReady\UrlShortener\Supports\Eloquent;
 
 class UrlShortener
 {
@@ -47,8 +49,12 @@ class UrlShortener
 
         if ($type === ShortingType::Custom || $type === ShortingType::EmojiCustom) {
             $shortCode = $data['short_code'];
-        } else if ($type === ShortingType::Random) {
-            $shortCode = self::getRandomString();
+        } else if ($type === ShortingType::Random || $type === ShortingType::EmojiRandom) {
+            if ($type === ShortingType::EmojiRandom && Config::get('url-shortener.emoji.allow', true)) {
+                $shortCode = self::getRandomEmojiString();
+            } else {
+                $shortCode = self::getRandomString();
+            }
         }
 
         return ShortUrl::create([
@@ -65,7 +71,7 @@ class UrlShortener
         ]);
     }
 
-    public static function getRandomString(int $retry = 10): string
+    private static function getRandomString(int $retry = 10): string
     {
         $characters = Config::get('url-shortener.characters');
         $minLength = Config::get('url-shortener.min_length');
@@ -97,6 +103,32 @@ class UrlShortener
             } else {
                 return false;
             }
+        }
+
+        return $randomString;
+    }
+
+    private static function getRandomEmojiString(): string
+    {
+        Eloquent::initNewDbConnection();
+
+        $emojis = Emoji::getBaseEmojiQuery(['emoji'])->get();
+
+        Eloquent::restorePreviousDbConnection();
+
+        if (!$emojis) {
+            throw new \Exception('No emoji found');
+        }
+
+        $emojiList = $emojis->pluck('emoji');
+        $emojiListCount = $emojiList->count();
+        $minLength = Config::get('url-shortener.min_length');
+        $maxLength = Config::get('url-shortener.max_length');
+
+        $randomString = '';
+
+        for ($i = 0; $i < $maxLength; $i++) {
+            $randomString .= $emojiList[rand(0, $emojiListCount - 1)];
         }
 
         return $randomString;

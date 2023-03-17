@@ -2,7 +2,6 @@
 
 namespace LaravelReady\UrlShortener\Supports;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
 use LaravelReady\UrlShortener\Models\ShortUrl;
 use LaravelReady\UrlShortener\Enums\ShortingType;
@@ -49,6 +48,10 @@ class UrlShortener
 
         if ($type === ShortingType::Custom || $type === ShortingType::EmojiCustom) {
             $shortCode = $data['short_code'];
+
+            if (!isset($data['short_code']) || empty($data['short_code'])) {
+                throw new \Exception('Short code is required');
+            }
         } else if ($type === ShortingType::Random || $type === ShortingType::EmojiRandom) {
             if ($type === ShortingType::EmojiRandom && Config::get('url-shortener.emoji.allow', true)) {
                 $shortCode = self::getRandomEmojiString();

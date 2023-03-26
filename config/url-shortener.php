@@ -92,5 +92,31 @@ return [
          * Default: 'emojis'
          */
         'base_route' => 'emojis',
+    ],
+
+    /**
+     * Ready to use basic API
+     */
+    'api' => [
+        /**
+         * Enable URL shortener API
+         * 
+         * Default: true
+         */
+        'enable' => true,
+
+        /**
+         * Route prefix for API
+         * 
+         * Default: 'api/url-shortener'
+         */
+        'route' => 'api/url-shortener',
+
+        /**
+         * Route middlewares
+         * 
+         * Default: ['api', 'auth:api']
+         */
+        'middleware' => ['api', 'auth:api'],
     ]
 ];

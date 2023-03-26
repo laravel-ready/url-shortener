@@ -2,11 +2,12 @@
 
 namespace LaravelReady\UrlShortener\Supports;
 
+use LaravelReady\UrlShortener\Exceptions\UrlShortenerException;
 use Illuminate\Support\Facades\Config;
 use LaravelReady\UrlShortener\Models\ShortUrl;
+use LaravelReady\UrlShortener\Supports\Eloquent;
 use LaravelReady\UrlShortener\Enums\ShortingType;
 use LaravelReady\UrlShortener\Models\ShortUrlGroup;
-use LaravelReady\UrlShortener\Supports\Eloquent;
 
 class UrlShortener
 {
@@ -50,7 +51,7 @@ class UrlShortener
             $shortCode = $data['short_code'];
 
             if (!isset($data['short_code']) || empty($data['short_code'])) {
-                throw new \Exception('Short code is required');
+                throw new UrlShortenerException('Short code is required');
             }
         } else if ($type === ShortingType::Random || $type === ShortingType::EmojiRandom) {
             if ($type === ShortingType::EmojiRandom && Config::get('url-shortener.emoji.allow', true)) {
@@ -83,15 +84,15 @@ class UrlShortener
         $charactersLength = strlen($characters);
 
         if ($charactersLength < 1) {
-            throw new \Exception('Characters length must be greater than 0');
+            throw new UrlShortenerException('Characters length must be greater than 0');
         } else if ($minLength < 1) {
-            throw new \Exception('Min length must be greater than 0');
+            throw new UrlShortenerException('Min length must be greater than 0');
         } else if ($maxLength < 1) {
-            throw new \Exception('Max length must be greater than 0');
+            throw new UrlShortenerException('Max length must be greater than 0');
         } else if ($minLength > $maxLength) {
-            throw new \Exception('Min length must be less than max length');
+            throw new UrlShortenerException('Min length must be less than max length');
         } else if ($charactersLength < $maxLength) {
-            throw new \Exception('Characters length must be greater than max length');
+            throw new UrlShortenerException('Characters length must be greater than max length');
         }
 
         $randomString = '';
@@ -122,7 +123,7 @@ class UrlShortener
         Eloquent::restorePreviousDbConnection();
 
         if (!$emojis) {
-            throw new \Exception('No emoji found');
+            throw new UrlShortenerException('No emoji found');
         }
 
         $emojiList = $emojis->pluck('emoji');

@@ -96,7 +96,9 @@ class UrlShortener
 
         $randomString = '';
 
-        for ($i = 0; $i < $maxLength; $i++) {
+        $shortLength = rand($minLength, $maxLength);
+
+        for ($i = 0; $i < $shortLength; $i++) {
             $randomString .= $characters[rand(0, $charactersLength - 1)];
         }
 
@@ -130,7 +132,9 @@ class UrlShortener
 
         $randomString = '';
 
-        for ($i = 0; $i < $maxLength; $i++) {
+        $shortLength = rand($minLength, $maxLength);
+
+        for ($i = 0; $i < $shortLength; $i++) {
             $randomString .= $emojiList[rand(0, $emojiListCount - 1)];
         }
 

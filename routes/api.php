@@ -3,9 +3,11 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Config;
 use LaravelReady\UrlShortener\Http\Controllers\UrlShortenerController;
+use LaravelReady\UrlShortener\Http\Controllers\EmojiController;
 
 if (Config::get('url-shortener.api.enable', true)) {
-    Route::name('url-shortener.api.')->prefix(Config::get('url-shortener.api.route', 'api/url-shortener'))->group(function () {
-        Route::get('', [UrlShortenerController::class, 'index'])->name('index');
+    Route::prefix(Config::get('url-shortener.api.route', 'api/url-shortener'))->name('url-shortener.api.')->group(function () {
+        Route::get('short-urls', [UrlShortenerController::class, 'index'])->name('short-urls');
+        Route::get('emojis', EmojiController::class)->name('emojis');
     });
 }

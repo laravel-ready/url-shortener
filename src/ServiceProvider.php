@@ -60,6 +60,5 @@ final class ServiceProvider extends BaseServiceProvider
     {
         $this->loadRoutesFrom(__DIR__ . '/../routes/api.php');
         $this->loadRoutesFrom(__DIR__ . '/../routes/redirect.php');
-        $this->loadRoutesFrom(__DIR__ . '/../routes/emoji.php');
     }
 }

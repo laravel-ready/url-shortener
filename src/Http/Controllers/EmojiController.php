@@ -13,11 +13,14 @@ class EmojiController extends Controller
     public function __invoke()
     {
         $emojisQuery = Emoji::getBaseEmojiQuery();
+        $emojisQueryForCacheKey = clone $emojisQuery;
 
-        $cacheKey = Config::get('url-shortener.table_name', 'short_url') . '_emojis.' . md5($emojisQuery->toSql());
+        $cacheKey = Config::get('url-shortener.table_name', 'short_url') . '_emojis.' . md5($emojisQueryForCacheKey->toSql());
 
-        if ($cacheKey) {
-            return response()->json($cacheKey);
+        if (Cache::has($cacheKey)) {
+            return response()->json(
+                Cache::get($cacheKey, [])
+            );
         }
 
         Eloquent::initNewDbConnection();

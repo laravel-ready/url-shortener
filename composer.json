@@ -3,7 +3,6 @@
     "description": "Simple URL shortener for laravel apps",
     "type": "library",
     "license": "MIT",
-    "version": "1.0.0",
     "keywords": [
         "url",
         "laravel",

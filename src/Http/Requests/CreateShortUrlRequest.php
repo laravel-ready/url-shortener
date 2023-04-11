@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Api;
+namespace LaravelReady\UrlShortener\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -21,12 +21,12 @@ class CreateShortUrlRequest extends FormRequest
         return [
             'url' => 'required|url',
             'type' => 'required|in:random,custom,emoji_random,emoji_custom',
-            'title' => 'nullable|string|min:3|max:200',
-            'description' => 'nullable|string|min:3|max:1000',
-            'status' => 'nullable|boolean',
-            'delay' => 'nullable|integer|min:0|max:1000',
-            'expire_date' => 'nullable|date_format:Y-m-d H:i:s|after_or_equal:' . date(DATE_ATOM),
-            'password' => 'nullable|string|min:3|max:100',
+            'meta.title' => 'nullable|string|min:3|max:200',
+            'meta.description' => 'nullable|string|min:3|max:1000',
+            'meta.status' => 'nullable|boolean',
+            'meta.delay' => 'nullable|integer|min:0|max:1000',
+            'meta.expire_date' => 'nullable|date_format:Y-m-d H:i:s|after_or_equal:' . date(DATE_ATOM),
+            'meta.password' => 'nullable|string|min:3|max:100',
         ];
     }
 }

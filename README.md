@@ -51,6 +51,8 @@ $shortUrl = UrlShortener::shortUrl(
 
 ### CreateShortUrlRequest
 
+To see all validation rules, see the [CreateShortUrlRequest](src/Http/Requests/CreateShortUrlRequest.php#L22) class.
+
 ```php
 use LaravelReady\UrlShortener\Requests\CreateShortUrlRequest;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelReady\UrlShortener\Requests;
+namespace LaravelReady\UrlShortener\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 

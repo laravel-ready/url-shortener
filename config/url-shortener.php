@@ -108,9 +108,9 @@ return [
         /**
          * Route prefix for API
          * 
-         * Default: 'api/url-shortener'
+         * Default: 'api/v1/url-shortener'
          */
-        'route' => 'api/url-shortener',
+        'route' => 'api/v1/url-shortener',
 
         /**
          * Route middlewares

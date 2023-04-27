@@ -21,6 +21,7 @@ class CreateShortUrlRequest extends FormRequest
         return [
             'url' => 'required|url',
             'type' => 'required|in:random,custom,emoji_random,emoji_custom',
+            'short_code' => 'required_if:type,custom,emoji_custom|nullable|string|min:3|max:100',
             'meta.title' => 'nullable|string|min:3|max:200',
             'meta.description' => 'nullable|string|min:3|max:1000',
             'meta.status' => 'nullable|boolean',

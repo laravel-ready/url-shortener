@@ -63,8 +63,8 @@ class UrlShortener
 
         return ShortUrl::create([
             'url' => $url,
-            'title' => $data['title'],
-            'description' => $data['description'],
+            'title' => $data['title'] ?? null,
+            'description' => $data['description'] ?? null,
             'short_code' => $shortCode,
             'type' => $type,
             'delay' => $data['delay'] ?? 0,

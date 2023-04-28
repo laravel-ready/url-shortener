@@ -103,7 +103,7 @@ class ShortUrl extends Model
 
     public function favicon(): HasOne
     {
-        return $this->hasOne(ShortUrlFavicon::class);
+        return $this->hasOne(ShortUrlFavicon::class, 'id', 'favicon_id');
     }
 
     public function getCreatedAtAttribute($value)

@@ -46,7 +46,7 @@ return new class extends Migration
                 $table->string('title', 200)->nullable()->default(null)->comment('URL title');
                 $table->string('description', 1000)->nullable()->default(null)->comment('URL description');
                 $table->text('short_code')->comment('Short URL code, exp: example.com/r/{short_code}');
-                $table->string('hash', 32)->comment('Short code md5 hash')
+                $table->string('hash', 32)->comment('Short code md5 hash');
                 $table->enum('type', ['random', 'custom', 'emoji_random', 'emoji_custom'])->comment('Shorting type');
                 $table->string('url', 2048)->comment('Redirect URL address');
                 $table->boolean('status')->default(true)->comment('URL redirect status, true: active, false: inactive');

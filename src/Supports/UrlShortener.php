@@ -66,6 +66,7 @@ class UrlShortener
             'title' => $data['title'] ?? null,
             'description' => $data['description'] ?? null,
             'short_code' => $shortCode,
+            'hash' => md5($shortCode),
             'type' => $type,
             'delay' => $data['delay'] ?? 0,
             'expire_date' => $data['expire_date'] ?? null,

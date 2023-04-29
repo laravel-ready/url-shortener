@@ -54,6 +54,7 @@ class ShortUrl extends Model
         'password',
         'title',
         'description',
+        'hash',
     ];
 
     protected $casts = [

@@ -53,8 +53,8 @@ class UrlShortener
             if (!isset($data['short_code']) || empty($data['short_code'])) {
                 throw new UrlShortenerException('Short code is required');
             }
-        } else if ($type === ShortingType::Random || $type === ShortingType::EmojiRandom) {
-            if ($type === ShortingType::EmojiRandom && Config::get('url-shortener.emoji.allow', true)) {
+        } else if ($type === ShortingType::Random || $type === ShortingType::Emoji) {
+            if ($type === ShortingType::Emoji && Config::get('url-shortener.emoji.allow', true)) {
                 $shortCode = self::getRandomEmojiString();
             } else {
                 $shortCode = self::getRandomString();

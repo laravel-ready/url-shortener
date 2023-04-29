@@ -6,6 +6,6 @@ enum ShortingType: string
 {
     case Random = 'random';
     case Custom = 'custom';
-    case EmojiRandom = 'emoji_random';
+    case Emoji = 'emoji';
     case EmojiCustom = 'emoji_custom';
 }

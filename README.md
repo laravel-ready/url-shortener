@@ -45,7 +45,7 @@ $shortUrl = UrlShortener::shortUrl(
         'title' => 'TEST TITLE',
         'description' => 'Lorem ipsum dolar amet',
     ],
-    ShortingType::EmojiRandom
+    ShortingType::Emoji
 );    
 ```
 

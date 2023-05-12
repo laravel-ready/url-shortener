@@ -41,6 +41,13 @@ return [
     'redirect_route_prefix' => 'r',
 
     /**
+     * Redirect controller for redirections
+     * 
+     * Default: \LaravelReady\UrlShortener\Http\Controllers\RedirectController::class
+     */
+    'redirect_controller' => \LaravelReady\UrlShortener\Http\Controllers\RedirectController::class,
+
+    /**
      * Emoji related settings
      */
     'emoji' => [

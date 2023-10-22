@@ -21,10 +21,14 @@ class Domain
             $favicon = ShortUrlFavicon::where('domain', $data['host'])->first();
 
             if (!$favicon) {
-                $favicon = ShortUrlFavicon::create([
-                    'domain' => $data['host'],
-                    'favicon' => (new Favicon())->getFavicon($data['host']),
-                ]);
+                $crawledFavicon = (new Favicon())->getFavicon($data['host']);
+
+                if ($crawledFavicon) {
+                    $favicon = ShortUrlFavicon::create([
+                        'domain' => $data['host'],
+                        'favicon' => $crawledFavicon,
+                    ]);
+                }
             }
 
             $data['favicon_id'] = $favicon->id ?? null;

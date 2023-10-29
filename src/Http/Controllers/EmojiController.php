@@ -119,6 +119,13 @@ class EmojiController extends Controller
         return $unicodeEmoji;
     }
 
+    /**
+     * Update unicode emoji status
+     * 
+     * @param UpdateUnicodeEmojiStatusRequest $request
+     * @param int $emoji
+     * @return JsonResponse
+     */
     public function updateStatus(UpdateUnicodeEmojiStatusRequest $request, int $emoji): JsonResponse
     {
         Eloquent::initNewDbConnection();

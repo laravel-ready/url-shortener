@@ -35,6 +35,7 @@ class Emoji
             ['isLayered', '=', 0],
             ['hasZeroWidthSpace', '=', 0],
             ['isSupportingByChromium', '=', 1],
+            ['isActive', '=', 1]
         ]);
 
         if (count($select)) {

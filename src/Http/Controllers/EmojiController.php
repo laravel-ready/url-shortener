@@ -31,6 +31,7 @@ class EmojiController extends Controller
         $sqlQueryWithBindings = Str::replaceArray('?', $sqlQueryBinding, $sqlQuery);
         $page = $request->integer('page', 1);
         $perPage = $request->integer('perPage', 0);
+        $perPage = $request->integer('perPage', 0);
 
         $cacheKey = Config::get('url-shortener.table_name', 'short_url') . '_emojis.' . $page . $perPage . md5($sqlQueryWithBindings);
 
@@ -42,9 +43,7 @@ class EmojiController extends Controller
 
         Eloquent::initNewDbConnection();
 
-        $perPage = $request->integer('perPage', 0);
-
-        $emojis = $perPage > 0 ? UnicodeEmoji::paginate($perPage, ['*'], 'page', $page) : UnicodeEmoji::get();
+        $emojis = $perPage > 0 ? UnicodeEmoji::paginate($perPage, ['*'], 'page', $page) : UnicodeEmoji::all();
 
         Eloquent::restorePreviousDbConnection();
 

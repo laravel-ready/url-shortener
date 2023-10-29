@@ -4,7 +4,6 @@ namespace LaravelReady\UrlShortener\Http\Controllers;
 
 use Illuminate\Support\Str;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
@@ -12,9 +11,12 @@ use LaravelReady\UrlShortener\Http\Requests\UpdateUnicodeEmojiStatusRequest;
 use LaravelReady\UrlShortener\Supports\Emoji;
 use LaravelReady\UrlShortener\Supports\Eloquent;
 use LaravelReady\UrlShortener\Models\Emoji\UnicodeEmoji;
+use LaravelReady\UrlShortener\Traits\EmojiCacheTrait;
 
 class EmojiController extends Controller
 {
+    use EmojiCacheTrait;
+
     /**
      * Get stable unicode emojis from SQLite database
      * 
@@ -29,19 +31,19 @@ class EmojiController extends Controller
 
         $cacheKey = Config::get('url-shortener.table_name', 'short_url') . '_emojis.' . md5($sqlQueryWithBindings);
 
-        if (Cache::has($cacheKey)) {
-            return response()->json(
-                Cache::get($cacheKey, [])
-            );
+        $emojis = $this->getCachedEmojis($cacheKey);
+
+        if ($emojis) {
+            return response()->json($emojis);
         }
 
         Eloquent::initNewDbConnection();
 
-        $emojis = Emoji::getBaseEmojiQuery()->get();
+        $emojis = Emoji::getBaseEmojiQuery()->get()->toArray();
 
         Eloquent::restorePreviousDbConnection();
 
-        Cache::put($cacheKey, $emojis, now()->addYear());
+        $this->setCacheForEmojis($cacheKey, $emojis);
 
         return response()->json($emojis);
     }
@@ -53,9 +55,17 @@ class EmojiController extends Controller
      */
     public function all(): JsonResponse
     {
+        $emojis = $this->getCachedEmojis('all');
+
+        if ($emojis) {
+            return response()->json($emojis);
+        }
+
         Eloquent::initNewDbConnection();
 
-        $emojis = UnicodeEmoji::all();
+        $emojis = UnicodeEmoji::all()->toArray();
+
+        $this->setCacheForEmojis('all', $emojis);
 
         Eloquent::restorePreviousDbConnection();
 
@@ -70,6 +80,16 @@ class EmojiController extends Controller
      */
     public function show(int $emoji): JsonResponse | UnicodeEmoji
     {
+        $emojis = $this->getCachedEmojis('all');
+
+        if ($emojis) {
+            $emoji = collect($emojis)->firstWhere('emoji', $emoji);
+
+            if ($emoji) {
+                return response()->json($emoji);
+            }
+        }
+
         Eloquent::initNewDbConnection();
 
         $unicodeEmoji = UnicodeEmoji::find($emoji);
@@ -113,6 +133,8 @@ class EmojiController extends Controller
                 'message' => 'Failed to update emoji status',
             ], 500);
         }
+
+        $this->clearEmojisCache();
 
         return response()->json([
             'message' => 'Emoji status updated successfully',

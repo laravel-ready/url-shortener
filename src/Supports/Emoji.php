@@ -2,6 +2,7 @@
 
 namespace LaravelReady\UrlShortener\Supports;
 
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Database\Eloquent\Builder;
 use LaravelReady\UrlShortener\Models\Emoji\UnicodeEmoji;
@@ -13,9 +14,9 @@ class Emoji
      * 
      * This query is used to get most basic emojis
      * 
-     * @return Builder
+     * @return Builder|LengthAwarePaginator
      */
-    public static function getBaseEmojiQuery(array $select = []): Builder
+    public static function getBaseEmojiQuery(array $select = []): Builder|LengthAwarePaginator
     {
         $query = UnicodeEmoji::with([
             'version',

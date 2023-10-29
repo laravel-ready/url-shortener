@@ -13,7 +13,7 @@ trait EmojiCacheTrait
         return Cache::get("{$this->cacheKey}:{$key}", []);
     }
 
-    public function setCacheForEmojis(string $key, array $emojis)
+    public function setCacheForEmojis(string $key, mixed $emojis)
     {
         $cacheKeysKey = "{$this->cacheKey}:cache_keys";
 

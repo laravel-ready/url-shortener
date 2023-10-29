@@ -2,6 +2,7 @@
 
 namespace LaravelReady\UrlShortener\Http\Controllers;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
@@ -22,14 +23,15 @@ class EmojiController extends Controller
      * 
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        $emojisQueryForCacheKey = Emoji::getBaseEmojiQuery();
+        $emojisQueryForCacheKey = Emoji::getBaseEmojiQuery([]);
         $sqlQuery = $emojisQueryForCacheKey->toSql();
         $sqlQueryBinding = $emojisQueryForCacheKey->getBindings();
         $sqlQueryWithBindings = Str::replaceArray('?', $sqlQueryBinding, $sqlQuery);
+        $page = $request->integer('page', 1);
 
-        $cacheKey = Config::get('url-shortener.table_name', 'short_url') . '_emojis.' . md5($sqlQueryWithBindings);
+        $cacheKey = Config::get('url-shortener.table_name', 'short_url') . '_emojis.' . $page . md5($sqlQueryWithBindings);
 
         $emojis = $this->getCachedEmojis($cacheKey);
 
@@ -39,7 +41,9 @@ class EmojiController extends Controller
 
         Eloquent::initNewDbConnection();
 
-        $emojis = Emoji::getBaseEmojiQuery()->get()->toArray();
+        $perPage = $request->integer('perPage', 25);
+
+        $emojis = $perPage > 0 ? Emoji::getBaseEmojiQuery()->paginate($perPage, ['*'], 'page', $page) : Emoji::getBaseEmojiQuery()->get();
 
         Eloquent::restorePreviousDbConnection();
 
@@ -53,9 +57,12 @@ class EmojiController extends Controller
      * 
      * @return \Illuminate\Http\JsonResponse
      */
-    public function all(): JsonResponse
+    public function all(Request $request): JsonResponse
     {
-        $emojis = $this->getCachedEmojis('all');
+        $perPage = $request->integer('perPage', 25);
+        $page = $request->integer('page', 1);
+
+        $emojis = $this->getCachedEmojis("all:{$perPage}:{$page}");
 
         if ($emojis) {
             return response()->json($emojis);
@@ -63,9 +70,9 @@ class EmojiController extends Controller
 
         Eloquent::initNewDbConnection();
 
-        $emojis = UnicodeEmoji::all()->toArray();
+        $emojis = $perPage > 0 ? Emoji::getBaseEmojiQuery()->paginate($perPage, ['*'], 'page', $page) : Emoji::getBaseEmojiQuery()->get();
 
-        $this->setCacheForEmojis('all', $emojis);
+        $this->setCacheForEmojis("all:{$perPage}:{$page}", $emojis);
 
         Eloquent::restorePreviousDbConnection();
 
@@ -80,6 +87,7 @@ class EmojiController extends Controller
      */
     public function show(int $emoji): JsonResponse | UnicodeEmoji
     {
+        // TODO: load direcly from databse
         $emojis = $this->getCachedEmojis('all');
 
         if ($emojis) {

@@ -30,8 +30,9 @@ class EmojiController extends Controller
         $sqlQueryBinding = $emojisQueryForCacheKey->getBindings();
         $sqlQueryWithBindings = Str::replaceArray('?', $sqlQueryBinding, $sqlQuery);
         $page = $request->integer('page', 1);
+        $perPage = $request->integer('perPage', 0);
 
-        $cacheKey = Config::get('url-shortener.table_name', 'short_url') . '_emojis.' . $page . md5($sqlQueryWithBindings);
+        $cacheKey = Config::get('url-shortener.table_name', 'short_url') . '_emojis.' . $page . $perPage . md5($sqlQueryWithBindings);
 
         $emojis = $this->getCachedEmojis($cacheKey);
 
@@ -41,7 +42,7 @@ class EmojiController extends Controller
 
         Eloquent::initNewDbConnection();
 
-        $perPage = $request->integer('perPage', 25);
+        $perPage = $request->integer('perPage', 0);
 
         $emojis = $perPage > 0 ? Emoji::getBaseEmojiQuery()->paginate($perPage, ['*'], 'page', $page) : Emoji::getBaseEmojiQuery()->get();
 
@@ -59,7 +60,7 @@ class EmojiController extends Controller
      */
     public function all(Request $request): JsonResponse
     {
-        $perPage = $request->integer('perPage', 25);
+        $perPage = $request->integer('perPage', 0);
         $page = $request->integer('page', 1);
 
         $emojis = $this->getCachedEmojis("all:{$perPage}:{$page}");

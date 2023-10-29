@@ -44,7 +44,7 @@ class EmojiController extends Controller
 
         $perPage = $request->integer('perPage', 0);
 
-        $emojis = $perPage > 0 ? Emoji::getBaseEmojiQuery()->paginate($perPage, ['*'], 'page', $page) : Emoji::getBaseEmojiQuery()->get();
+        $emojis = $perPage > 0 ? UnicodeEmoji::paginate($perPage, ['*'], 'page', $page) : UnicodeEmoji::get();
 
         Eloquent::restorePreviousDbConnection();
 

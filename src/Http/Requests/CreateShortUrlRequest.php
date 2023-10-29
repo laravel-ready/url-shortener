@@ -16,7 +16,7 @@ class CreateShortUrlRequest extends FormRequest
         return true;
     }
 
-    public function rules()
+    public function rules(): array
     {
         return [
             'url' => 'required|url',

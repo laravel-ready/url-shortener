@@ -11,7 +11,6 @@ if (Config::get('url-shortener.api.enable', true)) {
         // Route::get('emojis', EmojiController::class)->name('emojis');
 
         Route::prefix('emojis')->group(function () {
-            Route::get('all', [Controllers\EmojiController::class, 'all'])->name('emojis.all');
             Route::resource('', Controllers\EmojiController::class)->only(['index', 'show'])->parameters(['' => 'emoji']);
             Route::patch('{emoji}/status', [Controllers\EmojiController::class, 'updateStatus'])->name('emojis.update-status');
         });

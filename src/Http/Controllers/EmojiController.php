@@ -3,11 +3,8 @@
 namespace LaravelReady\UrlShortener\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Config;
 use LaravelReady\UrlShortener\Http\Requests\UpdateUnicodeEmojiStatusRequest;
 use LaravelReady\UrlShortener\Supports\Emoji;
 use LaravelReady\UrlShortener\Supports\Eloquent;
@@ -24,40 +21,6 @@ class EmojiController extends Controller
      * @return JsonResponse
      */
     public function index(Request $request): JsonResponse
-    {
-        $emojisQueryForCacheKey = Emoji::getBaseEmojiQuery([]);
-        $sqlQuery = $emojisQueryForCacheKey->toSql();
-        $sqlQueryBinding = $emojisQueryForCacheKey->getBindings();
-        $sqlQueryWithBindings = Str::replaceArray('?', $sqlQueryBinding, $sqlQuery);
-        $page = $request->integer('page', 1);
-        $perPage = $request->integer('perPage', 0);
-        $perPage = $request->integer('perPage', 0);
-
-        $cacheKey = Config::get('url-shortener.table_name', 'short_url') . '_emojis.' . $page . $perPage . md5($sqlQueryWithBindings);
-
-        $emojis = $this->getCachedEmojis($cacheKey);
-
-        if ($emojis) {
-            return response()->json($emojis);
-        }
-
-        Eloquent::initNewDbConnection();
-
-        $emojis = $perPage > 0 ? UnicodeEmoji::paginate($perPage, ['*'], 'page', $page) : UnicodeEmoji::all();
-
-        Eloquent::restorePreviousDbConnection();
-
-        $this->setCacheForEmojis($cacheKey, $emojis);
-
-        return response()->json($emojis);
-    }
-
-    /**
-     * Get all unicode emojis from SQLite database
-     * 
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function all(Request $request): JsonResponse
     {
         $perPage = $request->integer('perPage', 0);
         $page = $request->integer('page', 1);
